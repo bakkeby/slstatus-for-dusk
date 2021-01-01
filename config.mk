@@ -15,7 +15,7 @@ CPPFLAGS = -I$(X11INC) -D_DEFAULT_SOURCE
 CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Os
 LDFLAGS  = -L$(X11LIB) -s
 # OpenBSD: add -lsndio
-# FreeBSD: add -lkvm
+# FreeBSD: add -lkvm -lsndio
 LDLIBS   = -lX11
 
 # compiler and linker
