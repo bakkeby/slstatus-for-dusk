@@ -161,6 +161,7 @@
 				if (sioctl_revents(hdl, pfds) & POLLHUP) {
 					warn("sndio: disconnected");
 					cleanup();
+					initialized = 0;
 					return NULL;
 				}
 			}
