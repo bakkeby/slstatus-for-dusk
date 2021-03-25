@@ -22,7 +22,7 @@ uptime(const char *unused)
 	struct timespec uptime;
 
 	if (clock_gettime(UPTIME_FLAG, &uptime) < 0) {
-		snprintf(warn_buf, 256, "clock_gettime %d", UPTIME_FLAG);
+		snprintf(warn_buf, sizeof(warn_buf), "clock_gettime %d", UPTIME_FLAG);
 		warn(warn_buf);
 		return NULL;
 	}
