@@ -6,6 +6,9 @@
 #include "../util.h"
 
 #if defined(__linux__)
+/*
+ * https://www.kernel.org/doc/html/latest/power/power_supply_class.html
+ */
 	#include <limits.h>
 	#include <stdint.h>
 	#include <unistd.h>
@@ -35,15 +38,15 @@
 	const char *
 	battery_perc(const char *bat)
 	{
-		int perc;
+		int cap_perc;
 		char path[PATH_MAX];
 
 		if (esnprintf(path, sizeof(path), POWER_SUPPLY_CAPACITY, bat) < 0)
 			return NULL;
-		if (pscanf(path, "%d", &perc) != 1)
+		if (pscanf(path, "%d", &cap_perc) != 1)
 			return NULL;
 
-		return bprintf("%d", perc);
+		return bprintf("%d", cap_perc);
 	}
 
 	const char *
@@ -197,14 +200,14 @@
 	const char *
 	battery_perc(const char *unused)
 	{
-		int cap;
+		int cap_perc;
 		size_t len;
 
-		len = sizeof(cap);
-		if (sysctlbyname(BATTERY_LIFE, &cap, &len, NULL, 0) < 0 || !len)
+		len = sizeof(cap_perc);
+		if (sysctlbyname(BATTERY_LIFE, &cap_perc, &len, NULL, 0) < 0 || !len)
 			return NULL;
 
-		return bprintf("%d", cap);
+		return bprintf("%d", cap_perc);
 	}
 
 	const char *
