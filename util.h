@@ -3,7 +3,7 @@
 
 extern char buf[1024];
 
-#define LEN(x) (sizeof (x) / sizeof *(x))
+#define LEN(x) (sizeof(x) / sizeof((x)[0]))
 
 extern char *argv0;
 
