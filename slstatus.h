@@ -32,7 +32,7 @@ const char *ipv6(const char *interface);
 const char *kernel_release(void);
 
 /* keyboard_indicators */
-const char *keyboard_indicators(void);
+const char *keyboard_indicators(const char *fmt);
 
 /* keymap */
 const char *keymap(void);
