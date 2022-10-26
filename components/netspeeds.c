@@ -3,6 +3,7 @@
 #include <limits.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 #if defined(__linux__)
 	#include <stdint.h>

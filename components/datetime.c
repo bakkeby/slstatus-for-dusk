@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 const char *
 datetime(const char *fmt)

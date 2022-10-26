@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 #if defined(__OpenBSD__) | defined(__FreeBSD__)
 	#include <sys/queue.h>

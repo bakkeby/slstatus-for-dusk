@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include "../slstatus.h"
 #if defined(__linux__)
 	#include <stdint.h>
 	#include <stdio.h>

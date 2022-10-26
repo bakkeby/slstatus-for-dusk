@@ -6,6 +6,7 @@
 #include <X11/Xlib.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 static int
 valid_layout_or_variant(char *sym)

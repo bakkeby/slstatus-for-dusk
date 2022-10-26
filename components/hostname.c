@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 const char *
 hostname(void)

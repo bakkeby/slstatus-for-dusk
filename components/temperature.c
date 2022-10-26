@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 
 #if defined(__linux__)

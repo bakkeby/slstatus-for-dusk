@@ -3,6 +3,7 @@
 #include <sys/statvfs.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 const char *
 disk_free(const char *path)

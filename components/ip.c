@@ -12,6 +12,7 @@
 #endif
 
 #include "../util.h"
+#include "../slstatus.h"
 
 static const char *
 ip(const char *interface, unsigned short sa_family)

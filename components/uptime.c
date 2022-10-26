@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 #if defined(CLOCK_BOOTTIME)
 	#define UPTIME_FLAG CLOCK_BOOTTIME

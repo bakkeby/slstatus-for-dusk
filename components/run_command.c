@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 const char *
 run_command(const char *cmd)

@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 const char *
 gid(void)

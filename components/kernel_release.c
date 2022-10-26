@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 const char *
 kernel_release(void)

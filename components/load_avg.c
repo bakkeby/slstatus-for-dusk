@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "../util.h"
+#include "../slstatus.h"
 
 const char *
 load_avg(void)
