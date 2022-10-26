@@ -47,7 +47,7 @@ get_layout(char *syms, int grp_num)
 }
 
 const char *
-keymap(void)
+keymap(const char *unused)
 {
 	Display *dpy;
 	XkbDescRec *desc;

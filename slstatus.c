@@ -12,7 +12,7 @@
 #include "util.h"
 
 struct arg {
-	const char *(*func)();
+	const char *(*func)(const char *);
 	const char *fmt;
 	const char *args;
 };

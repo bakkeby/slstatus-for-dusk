@@ -6,7 +6,7 @@
 #include "../slstatus.h"
 
 const char *
-load_avg(void)
+load_avg(const char *unused)
 {
 	double avgs[3];
 

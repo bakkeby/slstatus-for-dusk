@@ -6,7 +6,7 @@
 #include "../slstatus.h"
 
 const char *
-kernel_release(void)
+kernel_release(const char *unused)
 {
 	struct utsname udata;
 

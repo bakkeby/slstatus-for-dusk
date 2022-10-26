@@ -15,7 +15,7 @@
 #endif
 
 const char *
-uptime(void)
+uptime(const char *unused)
 {
 	char warn_buf[256];
 	uintmax_t h, m;

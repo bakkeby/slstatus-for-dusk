@@ -59,7 +59,7 @@
 	}
 
 	const char *
-	swap_free(void)
+	swap_free(const char *unused)
 	{
 		long free;
 
@@ -71,7 +71,7 @@
 	}
 
 	const char *
-	swap_perc(void)
+	swap_perc(const char *unused)
 	{
 		long total, free, cached;
 
@@ -83,7 +83,7 @@
 	}
 
 	const char *
-	swap_total(void)
+	swap_total(const char *unused)
 	{
 		long total;
 
@@ -95,7 +95,7 @@
 	}
 
 	const char *
-	swap_used(void)
+	swap_used(const char *unused)
 	{
 		long total, free, cached;
 
@@ -148,7 +148,7 @@
 	}
 
 	const char *
-	swap_free(void)
+	swap_free(const char *unused)
 	{
 		int total, used;
 
@@ -160,7 +160,7 @@
 	}
 
 	const char *
-	swap_perc(void)
+	swap_perc(const char *unused)
 	{
 		int total, used;
 
@@ -176,7 +176,7 @@
 	}
 
 	const char *
-	swap_total(void)
+	swap_total(const char *unused)
 	{
 		int total, used;
 
@@ -188,7 +188,7 @@
 	}
 
 	const char *
-	swap_used(void)
+	swap_used(const char *unused)
 	{
 		int total, used;
 
@@ -226,7 +226,7 @@
 	}
 
 	const char *
-	swap_free(void)
+	swap_free(const char *unused)
 	{
 		struct kvm_swap swap_info[1];
 		long used, total;
@@ -241,7 +241,7 @@
 	}
 
 	const char *
-	swap_perc(void)
+	swap_perc(const char *unused)
 	{
 		struct kvm_swap swap_info[1];
 		long used, total;
@@ -256,7 +256,7 @@
 	}
 
 	const char *
-	swap_total(void)
+	swap_total(const char *unused)
 	{
 		struct kvm_swap swap_info[1];
 		long total;
@@ -270,7 +270,7 @@
 	}
 
 	const char *
-	swap_used(void)
+	swap_used(const char *unused)
 	{
 		struct kvm_swap swap_info[1];
 		long used;

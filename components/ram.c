@@ -8,7 +8,7 @@
 	#include <stdint.h>
 
 	const char *
-	ram_free(void)
+	ram_free(const char *unused)
 	{
 		uintmax_t free;
 
@@ -24,7 +24,7 @@
 	}
 
 	const char *
-	ram_perc(void)
+	ram_perc(const char *unused)
 	{
 		uintmax_t total, free, buffers, cached;
 
@@ -47,7 +47,7 @@
 	}
 
 	const char *
-	ram_total(void)
+	ram_total(const char *unused)
 	{
 		uintmax_t total;
 
@@ -60,7 +60,7 @@
 	}
 
 	const char *
-	ram_used(void)
+	ram_used(const char *unused)
 	{
 		uintmax_t total, free, buffers, cached;
 
@@ -102,7 +102,7 @@
 	}
 
 	const char *
-	ram_free(void)
+	ram_free(const char *unused)
 	{
 		struct uvmexp uvmexp;
 		int free_pages;
@@ -117,7 +117,7 @@
 	}
 
 	const char *
-	ram_perc(void)
+	ram_perc(const char *unused)
 	{
 		struct uvmexp uvmexp;
 		int percent;
@@ -131,7 +131,7 @@
 	}
 
 	const char *
-	ram_total(void)
+	ram_total(const char *unused)
 	{
 		struct uvmexp uvmexp;
 
@@ -145,7 +145,7 @@
 	}
 
 	const char *
-	ram_used(void)
+	ram_used(const char *unused)
 	{
 		struct uvmexp uvmexp;
 
@@ -164,7 +164,7 @@
 	#include <vm/vm_param.h>
 
 	const char *
-	ram_free(void) {
+	ram_free(const char *unused) {
 		struct vmtotal vm_stats;
 		int mib[] = {CTL_VM, VM_TOTAL};
 		size_t len;
@@ -178,7 +178,7 @@
 	}
 
 	const char *
-	ram_total(void) {
+	ram_total(const char *unused) {
 		unsigned int npages;
 		size_t len;
 
@@ -191,7 +191,7 @@
 	}
 
 	const char *
-	ram_perc(void) {
+	ram_perc(const char *unused) {
 		unsigned int npages;
 		unsigned int active;
 		size_t len;
@@ -209,7 +209,7 @@
 	}
 
 	const char *
-	ram_used(void) {
+	ram_used(const char *unused) {
 		unsigned int active;
 		size_t len;
 
