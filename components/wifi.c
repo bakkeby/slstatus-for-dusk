@@ -257,7 +257,7 @@
 		fmt = NULL;
 		len = sizeof(ssid);
 		memset(&ssid, 0, len);
-		if (load_ieee80211req(sockfd, interface, &ssid, IEEE80211_IOC_SSID, &len )) {
+		if (load_ieee80211req(sockfd, interface, &ssid, IEEE80211_IOC_SSID, &len)) {
 			if (len < sizeof(ssid))
 				len += 1;
 			else

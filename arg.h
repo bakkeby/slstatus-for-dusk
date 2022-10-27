@@ -13,7 +13,7 @@ extern char *argv0;
                  		break;                                            \
                  	}                                                         \
                  	for (i_ = 1, argused_ = 0; (*argv)[i_]; i_++) {           \
-                 		switch((*argv)[i_])
+				switch ((*argv)[i_])
 #define ARGEND   		if (argused_) {                                   \
                  			if ((*argv)[i_ + 1]) {                    \
                  				break;                            \
@@ -24,7 +24,7 @@ extern char *argv0;
                  		}                                                 \
                  	}                                                         \
                  }
-#define ARGC()   ((*argv)[i_])
+#define ARGC()    ((*argv)[i_])
 #define ARGF_(x) (((*argv)[i_ + 1]) ? (argused_ = 1, &((*argv)[i_ + 1])) :        \
                   (*(argv + 1))     ? (argused_ = 1, *(argv + 1))        : (x))
 #define EARGF(x) ARGF_(((x), exit(1), (char *)0))

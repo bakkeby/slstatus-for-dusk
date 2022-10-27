@@ -56,14 +56,14 @@ main(int argc, char *argv[])
 
 	sflag = 0;
 	ARGBEGIN {
-		case '1':
-			done = 1;
-			/* fallthrough */
-		case 's':
-			sflag = 1;
-			break;
-		default:
-			usage();
+	case '1':
+		done = 1;
+		/* FALLTHROUGH */
+	case 's':
+		sflag = 1;
+		break;
+	default:
+		usage();
 	} ARGEND
 
 	if (argc) {

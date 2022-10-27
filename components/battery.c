@@ -226,14 +226,14 @@
 		if (sysctlbyname(BATTERY_STATE, &state, &len, NULL, 0) < 0 || !len)
 			return NULL;
 
-		switch(state) {
-			case 0:
-			case 2:
-				return "+";
-			case 1:
-				return "-";
-			default:
-				return "?";
+		switch (state) {
+		case 0: /* FALLTHROUGH */
+		case 2:
+			return "+";
+		case 1:
+			return "-";
+		default:
+			return "?";
 		}
 	}
 

@@ -210,7 +210,7 @@
 		kvm_t *kd;
 
 		kd = kvm_openfiles(NULL, "/dev/null", NULL, 0, NULL);
-		if(kd == NULL) {
+		if (kd == NULL) {
 			warn("kvm_openfiles '/dev/null':");
 			return 0;
 		}
@@ -231,7 +231,7 @@
 		struct kvm_swap swap_info[1];
 		long used, total;
 
-		if(!getswapinfo(swap_info, 1))
+		if (!getswapinfo(swap_info, 1))
 			return NULL;
 
 		total = swap_info[0].ksw_total;
@@ -246,7 +246,7 @@
 		struct kvm_swap swap_info[1];
 		long used, total;
 
-		if(!getswapinfo(swap_info, 1))
+		if (!getswapinfo(swap_info, 1))
 			return NULL;
 
 		total = swap_info[0].ksw_total;
@@ -261,7 +261,7 @@
 		struct kvm_swap swap_info[1];
 		long total;
 
-		if(!getswapinfo(swap_info, 1))
+		if (!getswapinfo(swap_info, 1))
 			return NULL;
 
 		total = swap_info[0].ksw_total;
@@ -275,7 +275,7 @@
 		struct kvm_swap swap_info[1];
 		long used;
 
-		if(!getswapinfo(swap_info, 1))
+		if (!getswapinfo(swap_info, 1))
 			return NULL;
 
 		used = swap_info[0].ksw_used;
