@@ -8,6 +8,9 @@
 #if defined(__linux__)
 	#include <stdint.h>
 
+	#define NET_RX_BYTES "/sys/class/net/%s/statistics/rx_bytes"
+	#define NET_TX_BYTES "/sys/class/net/%s/statistics/tx_bytes"
+
 	const char *
 	netspeed_rx(const char *interface)
 	{
@@ -18,11 +21,8 @@
 
 		oldrxbytes = rxbytes;
 
-		if (esnprintf(path, sizeof(path),
-		              "/sys/class/net/%s/statistics/rx_bytes",
-		              interface) < 0) {
+		if (esnprintf(path, sizeof(path), NET_RX_BYTES, interface) < 0)
 			return NULL;
-		}
 		if (pscanf(path, "%ju", &rxbytes) != 1) {
 			return NULL;
 		}
@@ -44,11 +44,8 @@
 
 		oldtxbytes = txbytes;
 
-		if (esnprintf(path, sizeof(path),
-		              "/sys/class/net/%s/statistics/tx_bytes",
-		              interface) < 0) {
+		if (esnprintf(path, sizeof(path), NET_TX_BYTES, interface) < 0)
 			return NULL;
-		}
 		if (pscanf(path, "%ju", &txbytes) != 1) {
 			return NULL;
 		}

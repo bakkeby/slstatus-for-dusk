@@ -18,6 +18,8 @@
 	#include <limits.h>
 	#include <linux/wireless.h>
 
+	#define NET_OPERSTATE "/sys/class/net/%s/operstate"
+
 	const char *
 	wifi_perc(const char *interface)
 	{
@@ -28,10 +30,8 @@
 		char status[5];
 		FILE *fp;
 
-		if (esnprintf(path, sizeof(path), "/sys/class/net/%s/operstate",
-		              interface) < 0) {
+		if (esnprintf(path, sizeof(path), NET_OPERSTATE, interface) < 0)
 			return NULL;
-		}
 		if (!(fp = fopen(path, "r"))) {
 			warn("fopen '%s':", path);
 			return NULL;

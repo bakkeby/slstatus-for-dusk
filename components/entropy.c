@@ -6,15 +6,15 @@
 
 	#include "../util.h"
 
+	#define ENTROPY_AVAIL "/proc/sys/kernel/random/entropy_avail"
+
 	const char *
 	entropy(const char *unused)
 	{
 		uintmax_t num;
 
-		if (pscanf("/proc/sys/kernel/random/entropy_avail", "%ju", &num)
-		    != 1) {
+		if (pscanf(ENTROPY_AVAIL, "%ju", &num) != 1)
 			return NULL;
-		}
 
 		return bprintf("%ju", num);
 	}

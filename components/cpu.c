@@ -7,16 +7,16 @@
 #include "../slstatus.h"
 
 #if defined(__linux__)
+	#define CPU_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"
+
 	const char *
 	cpu_freq(const char *unused)
 	{
 		uintmax_t freq;
 
 		/* in kHz */
-		if (pscanf("/sys/devices/system/cpu/cpu0/cpufreq/"
-		           "scaling_cur_freq", "%ju", &freq) != 1) {
+		if (pscanf(CPU_FREQ, "%ju", &freq) != 1)
 			return NULL;
-		}
 
 		return fmt_human(freq * 1000, 1000);
 	}
