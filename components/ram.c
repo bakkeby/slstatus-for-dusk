@@ -107,13 +107,12 @@
 		struct uvmexp uvmexp;
 		int free_pages;
 
-		if (load_uvmexp(&uvmexp)) {
-			free_pages = uvmexp.npages - uvmexp.active;
-			return fmt_human(pagetok(free_pages, uvmexp.pageshift) *
-			                 1024, 1024);
-		}
+		if (!load_uvmexp(&uvmexp))
+			return NULL;
 
-		return NULL;
+		free_pages = uvmexp.npages - uvmexp.active;
+		return fmt_human(pagetok(free_pages, uvmexp.pageshift) *
+				 1024, 1024);
 	}
 
 	const char *
@@ -122,12 +121,11 @@
 		struct uvmexp uvmexp;
 		int percent;
 
-		if (load_uvmexp(&uvmexp)) {
-			percent = uvmexp.active * 100 / uvmexp.npages;
-			return bprintf("%d", percent);
-		}
+		if (!load_uvmexp(&uvmexp))
+			return NULL;
 
-		return NULL;
+		percent = uvmexp.active * 100 / uvmexp.npages;
+		return bprintf("%d", percent);
 	}
 
 	const char *
@@ -135,13 +133,11 @@
 	{
 		struct uvmexp uvmexp;
 
-		if (load_uvmexp(&uvmexp)) {
-			return fmt_human(pagetok(uvmexp.npages,
-			                         uvmexp.pageshift) * 1024,
-			                 1024);
-		}
+		if (!load_uvmexp(&uvmexp))
+			return NULL;
 
-		return NULL;
+		return fmt_human(pagetok(uvmexp.npages,
+					 uvmexp.pageshift) * 1024, 1024);
 	}
 
 	const char *
@@ -149,13 +145,11 @@
 	{
 		struct uvmexp uvmexp;
 
-		if (load_uvmexp(&uvmexp)) {
-			return fmt_human(pagetok(uvmexp.active,
-			                         uvmexp.pageshift) * 1024,
-			                 1024);
-		}
+		if (!load_uvmexp(&uvmexp))
+			return NULL;
 
-		return NULL;
+		return fmt_human(pagetok(uvmexp.active,
+					 uvmexp.pageshift) * 1024, 1024);
 	}
 #elif defined(__FreeBSD__)
 	#include <sys/sysctl.h>
