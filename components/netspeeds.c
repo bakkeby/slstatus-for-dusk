@@ -1,9 +1,9 @@
 /* See LICENSE file for copyright and license details. */
-#include <stdio.h>
 #include <limits.h>
+#include <stdio.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 #if defined(__linux__)
 	#include <stdint.h>
@@ -57,11 +57,11 @@
 		                 1024);
 	}
 #elif defined(__OpenBSD__) | defined(__FreeBSD__)
-	#include <string.h>
 	#include <ifaddrs.h>
+	#include <net/if.h>
+	#include <string.h>
 	#include <sys/types.h>
 	#include <sys/socket.h>
-	#include <net/if.h>
 
 	const char *
 	netspeed_rx(const char *interface)

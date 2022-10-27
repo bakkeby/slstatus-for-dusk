@@ -4,8 +4,8 @@
 #include <string.h>
 #include <X11/Xlib.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 /*
  * fmt consists of uppercase or lowercase 'c' for caps lock and/or 'n' for num

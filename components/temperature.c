@@ -1,8 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 #include <stddef.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 
 #if defined(__linux__)

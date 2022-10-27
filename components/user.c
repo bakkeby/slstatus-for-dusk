@@ -4,8 +4,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 const char *
 gid(const char *unused)

@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 const char *
 load_avg(const char *unused)

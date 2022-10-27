@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 #if defined(__linux__)
 	#define CPU_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"
@@ -110,9 +110,9 @@
 		                 b[CP_INTR])) / sum);
 	}
 #elif defined(__FreeBSD__)
+	#include <devstat.h>
 	#include <sys/param.h>
 	#include <sys/sysctl.h>
-	#include <devstat.h>
 
 	const char *
 	cpu_freq(const char *unused)

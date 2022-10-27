@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <sys/statvfs.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 const char *
 disk_free(const char *path)

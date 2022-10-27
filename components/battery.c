@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 #if defined(__linux__)
 	#include <limits.h>

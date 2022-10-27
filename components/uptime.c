@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 #if defined(CLOCK_BOOTTIME)
 	#define UPTIME_FLAG CLOCK_BOOTTIME

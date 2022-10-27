@@ -5,14 +5,14 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 #if defined(__OpenBSD__) | defined(__FreeBSD__)
-	#include <sys/queue.h>
 	#include <poll.h>
 	#include <sndio.h>
 	#include <stdlib.h>
+	#include <sys/queue.h>
 
 	struct control {
 		LIST_ENTRY(control)	next;

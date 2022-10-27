@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 #if defined(__linux__)
 	static int
@@ -199,11 +199,11 @@
 		return fmt_human(used * 1024, 1024);
 	}
 #elif defined(__FreeBSD__)
+	#include <fcntl.h>
+	#include <kvm.h>
 	#include <stdlib.h>
 	#include <sys/types.h>
-	#include <fcntl.h>
 	#include <unistd.h>
-	#include <kvm.h>
 
 	static int getswapinfo(struct kvm_swap *swap_info, size_t size)
 	{

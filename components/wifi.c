@@ -6,8 +6,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 #define RSSI_TO_PERC(rssi) \
 			rssi >= -50 ? 100 : \

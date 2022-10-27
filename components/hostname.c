@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "../util.h"
 #include "../slstatus.h"
+#include "../util.h"
 
 const char *
 hostname(const char *unused)
