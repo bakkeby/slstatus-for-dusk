@@ -27,6 +27,7 @@
 	ram_perc(const char *unused)
 	{
 		uintmax_t total, free, buffers, cached;
+		int percent;
 
 		if (pscanf("/proc/meminfo",
 		           "MemTotal: %ju kB\n"
@@ -42,8 +43,8 @@
 			return NULL;
 		}
 
-		return bprintf("%d", 100 * ((total - free) - (buffers + cached))
-                               / total);
+		percent = 100 * ((total - free) - (buffers + cached)) / total;
+		return bprintf("%d", percent);
 	}
 
 	const char *
@@ -62,7 +63,7 @@
 	const char *
 	ram_used(const char *unused)
 	{
-		uintmax_t total, free, buffers, cached;
+		uintmax_t total, free, buffers, cached, used;
 
 		if (pscanf("/proc/meminfo",
 		           "MemTotal: %ju kB\n"
@@ -70,12 +71,11 @@
 		           "MemAvailable: %ju kB\n"
 		           "Buffers: %ju kB\n"
 		           "Cached: %ju kB\n",
-		           &total, &free, &buffers, &buffers, &cached) != 5) {
+		           &total, &free, &buffers, &buffers, &cached) != 5)
 			return NULL;
-		}
 
-		return fmt_human((total - free - buffers - cached) * 1024,
-		                 1024);
+		used = (total - free - buffers - cached);
+		return fmt_human(used * 1024, 1024);
 	}
 #elif defined(__OpenBSD__)
 	#include <stdlib.h>
