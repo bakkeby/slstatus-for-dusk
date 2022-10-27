@@ -22,14 +22,12 @@
 	     size_t length)
 	{
 		if (esnprintf(path, length, f1, bat) > 0 &&
-		    access(path, R_OK) == 0) {
+		    access(path, R_OK) == 0)
 			return f1;
-		}
 
 		if (esnprintf(path, length, f2, bat) > 0 &&
-		    access(path, R_OK) == 0) {
+		    access(path, R_OK) == 0)
 			return f2;
-		}
 
 		return NULL;
 	}
@@ -42,9 +40,8 @@
 
 		if (esnprintf(path, sizeof(path), POWER_SUPPLY_CAPACITY, bat) < 0)
 			return NULL;
-		if (pscanf(path, "%d", &perc) != 1) {
+		if (pscanf(path, "%d", &perc) != 1)
 			return NULL;
-		}
 
 		return bprintf("%d", perc);
 	}
@@ -66,15 +63,13 @@
 
 		if (esnprintf(path, sizeof(path), POWER_SUPPLY_STATUS, bat) < 0)
 			return NULL;
-		if (pscanf(path, "%12[a-zA-Z ]", state) != 1) {
+		if (pscanf(path, "%12[a-zA-Z ]", state) != 1)
 			return NULL;
-		}
 
-		for (i = 0; i < LEN(map); i++) {
-			if (!strcmp(map[i].state, state)) {
+		for (i = 0; i < LEN(map); i++)
+			if (!strcmp(map[i].state, state))
 				break;
-			}
-		}
+
 		return (i == LEN(map)) ? "?" : map[i].symbol;
 	}
 
@@ -87,9 +82,8 @@
 
 		if (esnprintf(path, sizeof(path), POWER_SUPPLY_STATUS, bat) < 0)
 			return NULL;
-		if (pscanf(path, "%12[a-zA-Z ]", state) != 1) {
+		if (pscanf(path, "%12[a-zA-Z ]", state) != 1)
 			return NULL;
-		}
 
 		if (!pick(bat, POWER_SUPPLY_CHARGE, POWER_SUPPLY_ENERGY, path,
 		          sizeof(path)) ||
@@ -102,9 +96,8 @@
 			    pscanf(path, "%ju", &current_now) < 0)
 				return NULL;
 
-			if (current_now == 0) {
+			if (current_now == 0)
 				return NULL;
-			}
 
 			timeleft = (double)charge_now / (double)current_now;
 			h = timeleft;
@@ -146,9 +139,8 @@
 	{
 		struct apm_power_info apm_info;
 
-		if (load_apm_power_info(&apm_info)) {
+		if (load_apm_power_info(&apm_info))
 			return bprintf("%d", apm_info.battery_life);
-		}
 
 		return NULL;
 	}
@@ -167,11 +159,10 @@
 		size_t i;
 
 		if (load_apm_power_info(&apm_info)) {
-			for (i = 0; i < LEN(map); i++) {
-				if (map[i].state == apm_info.ac_state) {
+			for (i = 0; i < LEN(map); i++)
+				if (map[i].state == apm_info.ac_state)
 					break;
-				}
-			}
+
 			return (i == LEN(map)) ? "?" : map[i].symbol;
 		}
 

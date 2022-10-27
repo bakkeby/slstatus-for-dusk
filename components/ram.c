@@ -16,9 +16,8 @@
 		           "MemTotal: %ju kB\n"
 		           "MemFree: %ju kB\n"
 		           "MemAvailable: %ju kB\n",
-		           &free, &free, &free) != 3) {
+		           &free, &free, &free) != 3)
 			return NULL;
-		}
 
 		return fmt_human(free * 1024, 1024);
 	}
@@ -35,13 +34,11 @@
 		           "MemAvailable: %ju kB\n"
 		           "Buffers: %ju kB\n"
 		           "Cached: %ju kB\n",
-		           &total, &free, &buffers, &buffers, &cached) != 5) {
+		           &total, &free, &buffers, &buffers, &cached) != 5)
 			return NULL;
-		}
 
-		if (total == 0) {
+		if (total == 0)
 			return NULL;
-		}
 
 		percent = 100 * ((total - free) - (buffers + cached)) / total;
 		return bprintf("%d", percent);
@@ -53,9 +50,8 @@
 		uintmax_t total;
 
 		if (pscanf("/proc/meminfo", "MemTotal: %ju kB\n", &total)
-		    != 1) {
+		    != 1)
 			return NULL;
-		}
 
 		return fmt_human(total * 1024, 1024);
 	}
@@ -94,9 +90,8 @@
 
 		size = sizeof(*uvmexp);
 
-		if (sysctl(uvmexp_mib, 2, uvmexp, &size, NULL, 0) >= 0) {
+		if (sysctl(uvmexp_mib, 2, uvmexp, &size, NULL, 0) >= 0)
 			return 1;
-		}
 
 		return 0;
 	}

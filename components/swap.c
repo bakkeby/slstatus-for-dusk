@@ -25,11 +25,9 @@
 		char *line = NULL;
 
 		/* get number of fields we want to extract */
-		for (i = 0, left = 0; i < LEN(ent); i++) {
-			if (ent[i].var) {
+		for (i = 0, left = 0; i < LEN(ent); i++)
+			if (ent[i].var)
 				left++;
-			}
-		}
 
 		if (!(fp = fopen("/proc/meminfo", "r"))) {
 			warn("fopen '/proc/meminfo':");
@@ -63,9 +61,8 @@
 	{
 		long free;
 
-		if (get_swap_info(NULL, &free, NULL)) {
+		if (get_swap_info(NULL, &free, NULL))
 			return NULL;
-		}
 
 		return fmt_human(free * 1024, 1024);
 	}
@@ -75,9 +72,8 @@
 	{
 		long total, free, cached;
 
-		if (get_swap_info(&total, &free, &cached) || total == 0) {
+		if (get_swap_info(&total, &free, &cached) || total == 0)
 			return NULL;
-		}
 
 		return bprintf("%d", 100 * (total - free - cached) / total);
 	}
@@ -87,9 +83,8 @@
 	{
 		long total;
 
-		if (get_swap_info(&total, NULL, NULL)) {
+		if (get_swap_info(&total, NULL, NULL))
 			return NULL;
-		}
 
 		return fmt_human(total * 1024, 1024);
 	}
@@ -99,9 +94,8 @@
 	{
 		long total, free, cached;
 
-		if (get_swap_info(&total, &free, &cached)) {
+		if (get_swap_info(&total, &free, &cached))
 			return NULL;
-		}
 
 		return fmt_human((total - free - cached) * 1024, 1024);
 	}
@@ -152,9 +146,8 @@
 	{
 		int total, used;
 
-		if (getstats(&total, &used)) {
+		if (getstats(&total, &used))
 			return NULL;
-		}
 
 		return fmt_human((total - used) * 1024, 1024);
 	}
@@ -164,13 +157,11 @@
 	{
 		int total, used;
 
-		if (getstats(&total, &used)) {
+		if (getstats(&total, &used))
 			return NULL;
-		}
 
-		if (total == 0) {
+		if (total == 0)
 			return NULL;
-		}
 
 		return bprintf("%d", 100 * used / total);
 	}
@@ -180,9 +171,8 @@
 	{
 		int total, used;
 
-		if (getstats(&total, &used)) {
+		if (getstats(&total, &used))
 			return NULL;
-		}
 
 		return fmt_human(total * 1024, 1024);
 	}
@@ -192,9 +182,8 @@
 	{
 		int total, used;
 
-		if (getstats(&total, &used)) {
+		if (getstats(&total, &used))
 			return NULL;
-		}
 
 		return fmt_human(used * 1024, 1024);
 	}

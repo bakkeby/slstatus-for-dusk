@@ -33,17 +33,18 @@ keyboard_indicators(const char *fmt)
 	fmtlen = strnlen(fmt, 4);
 	for (i = n = 0; i < fmtlen; i++) {
 		key = tolower(fmt[i]);
-		if (key != 'c' && key != 'n') {
+		if (key != 'c' && key != 'n')
 			continue;
-		}
+
 		togglecase = (i + 1 >= fmtlen || fmt[i + 1] != '?');
 		isset = (state.led_mask & (1 << (key == 'n')));
-		if (togglecase) {
+
+		if (togglecase)
 			buf[n++] = isset ? toupper(key) : key;
-		} else if (isset) {
+		else if (isset)
 			buf[n++] = fmt[i];
-		}
 	}
+
 	buf[n] = 0;
 	return buf;
 }

@@ -23,12 +23,10 @@
 
 		if (esnprintf(path, sizeof(path), NET_RX_BYTES, interface) < 0)
 			return NULL;
-		if (pscanf(path, "%ju", &rxbytes) != 1) {
+		if (pscanf(path, "%ju", &rxbytes) != 1)
 			return NULL;
-		}
-		if (oldrxbytes == 0) {
+		if (oldrxbytes == 0)
 			return NULL;
-		}
 
 		return fmt_human((rxbytes - oldrxbytes) * 1000 / interval,
 		                 1024);
@@ -46,12 +44,10 @@
 
 		if (esnprintf(path, sizeof(path), NET_TX_BYTES, interface) < 0)
 			return NULL;
-		if (pscanf(path, "%ju", &txbytes) != 1) {
+		if (pscanf(path, "%ju", &txbytes) != 1)
 			return NULL;
-		}
-		if (oldtxbytes == 0) {
+		if (oldtxbytes == 0)
 			return NULL;
-		}
 
 		return fmt_human((txbytes - oldtxbytes) * 1000 / interval,
 		                 1024);
@@ -80,20 +76,18 @@
 			return NULL;
 		}
 		rxbytes = 0;
-		for (ifa = ifal; ifa; ifa = ifa->ifa_next) {
+		for (ifa = ifal; ifa; ifa = ifa->ifa_next)
 			if (!strcmp(ifa->ifa_name, interface) &&
-			   (ifd = (struct if_data *)ifa->ifa_data)) {
+			   (ifd = (struct if_data *)ifa->ifa_data))
 				rxbytes += ifd->ifi_ibytes, if_ok = 1;
-			}
-		}
+
 		freeifaddrs(ifal);
 		if (!if_ok) {
 			warn("reading 'if_data' failed");
 			return NULL;
 		}
-		if (oldrxbytes == 0) {
+		if (oldrxbytes == 0)
 			return NULL;
-		}
 
 		return fmt_human((rxbytes - oldrxbytes) * 1000 / interval,
 		                 1024);
@@ -116,20 +110,18 @@
 			return NULL;
 		}
 		txbytes = 0;
-		for (ifa = ifal; ifa; ifa = ifa->ifa_next) {
+		for (ifa = ifal; ifa; ifa = ifa->ifa_next)
 			if (!strcmp(ifa->ifa_name, interface) &&
-			   (ifd = (struct if_data *)ifa->ifa_data)) {
+			   (ifd = (struct if_data *)ifa->ifa_data))
 				txbytes += ifd->ifi_obytes, if_ok = 1;
-			}
-		}
+
 		freeifaddrs(ifal);
 		if (!if_ok) {
 			warn("reading 'if_data' failed");
 			return NULL;
 		}
-		if (oldtxbytes == 0) {
+		if (oldtxbytes == 0)
 			return NULL;
-		}
 
 		return fmt_human((txbytes - oldtxbytes) * 1000 / interval,
 		                 1024);

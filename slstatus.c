@@ -66,9 +66,8 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND
 
-	if (argc) {
+	if (argc)
 		usage();
-	}
 
 	memset(&act, 0, sizeof(act));
 	act.sa_handler = terminate;
@@ -77,24 +76,22 @@ main(int argc, char *argv[])
 	act.sa_flags |= SA_RESTART;
 	sigaction(SIGUSR1, &act, NULL);
 
-	if (!sflag && !(dpy = XOpenDisplay(NULL))) {
+	if (!sflag && !(dpy = XOpenDisplay(NULL)))
 		die("XOpenDisplay: Failed to open display");
-	}
 
 	do {
-		if (clock_gettime(CLOCK_MONOTONIC, &start) < 0) {
+		if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
 			die("clock_gettime:");
-		}
 
 		status[0] = '\0';
 		for (i = len = 0; i < LEN(args); i++) {
-			if (!(res = args[i].func(args[i].args))) {
+			if (!(res = args[i].func(args[i].args)))
 				res = unknown_str;
-			}
+
 			if ((ret = esnprintf(status + len, sizeof(status) - len,
-			                    args[i].fmt, res)) < 0) {
+			                     args[i].fmt, res)) < 0)
 				break;
-			}
+
 			len += ret;
 		}
 
@@ -104,37 +101,31 @@ main(int argc, char *argv[])
 			if (ferror(stdout))
 				die("puts:");
 		} else {
-			if (XStoreName(dpy, DefaultRootWindow(dpy), status)
-                            < 0) {
+			if (XStoreName(dpy, DefaultRootWindow(dpy), status) < 0)
 				die("XStoreName: Allocation failed");
-			}
 			XFlush(dpy);
 		}
 
 		if (!done) {
-			if (clock_gettime(CLOCK_MONOTONIC, &current) < 0) {
+			if (clock_gettime(CLOCK_MONOTONIC, &current) < 0)
 				die("clock_gettime:");
-			}
 			difftimespec(&diff, &current, &start);
 
 			intspec.tv_sec = interval / 1000;
 			intspec.tv_nsec = (interval % 1000) * 1E6;
 			difftimespec(&wait, &intspec, &diff);
 
-			if (wait.tv_sec >= 0) {
-				if (nanosleep(&wait, NULL) < 0 &&
-				    errno != EINTR) {
+			if (wait.tv_sec >= 0 &&
+			    nanosleep(&wait, NULL) < 0 &&
+			    errno != EINTR)
 					die("nanosleep:");
-				}
-			}
 		}
 	} while (!done);
 
 	if (!sflag) {
 		XStoreName(dpy, DefaultRootWindow(dpy), NULL);
-		if (XCloseDisplay(dpy) < 0) {
+		if (XCloseDisplay(dpy) < 0)
 			die("XCloseDisplay: Failed to close display");
-		}
 	}
 
 	return 0;

@@ -15,11 +15,9 @@ valid_layout_or_variant(char *sym)
 	/* invalid symbols from xkb rules config */
 	static const char *invalid[] = { "evdev", "inet", "pc", "base" };
 
-	for (i = 0; i < LEN(invalid); i++) {
-		if (!strncmp(sym, invalid[i], strlen(invalid[i]))) {
+	for (i = 0; i < LEN(invalid); i++)
+		if (!strncmp(sym, invalid[i], strlen(invalid[i])))
 			return 0;
-		}
-	}
 
 	return 1;
 }
@@ -80,9 +78,8 @@ keymap(const char *unused)
 	XFree(symbols);
 end:
 	XkbFreeKeyboard(desc, XkbSymbolsNameMask, 1);
-	if (XCloseDisplay(dpy)) {
+	if (XCloseDisplay(dpy))
 		warn("XCloseDisplay: Failed to close display");
-	}
 
 	return layout;
 }
