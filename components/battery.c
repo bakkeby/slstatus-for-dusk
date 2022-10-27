@@ -182,12 +182,13 @@
 	battery_remaining(const char *unused)
 	{
 		struct apm_power_info apm_info;
+		unsigned int h, m;
 
 		if (load_apm_power_info(&apm_info)) {
 			if (apm_info.ac_state != APM_AC_ON) {
-				return bprintf("%uh %02um",
-			                       apm_info.minutes_left / 60,
-				               apm_info.minutes_left % 60);
+				h = apm_info.minutes_left / 60;
+				m = apm_info.minutes_left % 60;
+				return bprintf("%uh %02um", h, m);
 			} else {
 				return "";
 			}
