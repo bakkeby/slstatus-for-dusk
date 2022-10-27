@@ -204,7 +204,7 @@
 			return 0;
 		}
 
-		if(kvm_getswapinfo(kd, swap_info, size, 0 /* Unused flags */) == -1) {
+		if (kvm_getswapinfo(kd, swap_info, size, 0 /* Unused flags */) < 0) {
 			warn("kvm_getswapinfo:");
 			kvm_close(kd);
 			return 0;

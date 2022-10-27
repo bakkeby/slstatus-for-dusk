@@ -71,7 +71,7 @@
 
 		oldrxbytes = rxbytes;
 
-		if (getifaddrs(&ifal) == -1) {
+		if (getifaddrs(&ifal) < 0) {
 			warn("getifaddrs failed");
 			return NULL;
 		}
@@ -105,7 +105,7 @@
 
 		oldtxbytes = txbytes;
 
-		if (getifaddrs(&ifal) == -1) {
+		if (getifaddrs(&ifal) < 0) {
 			warn("getifaddrs failed");
 			return NULL;
 		}
