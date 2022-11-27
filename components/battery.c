@@ -14,8 +14,8 @@
 	#define POWER_SUPPLY_STATUS   "/sys/class/power_supply/%s/status"
 	#define POWER_SUPPLY_CHARGE   "/sys/class/power_supply/%s/charge_now"
 	#define POWER_SUPPLY_ENERGY   "/sys/class/power_supply/%s/energy_now"
-	#define POWER_SUPPLY_CURRENT  "/sys/class/power_supply/%s/current"
-	#define POWER_SUPPLY_POWER    "/sys/class/power_supply/%s/power"
+	#define POWER_SUPPLY_CURRENT  "/sys/class/power_supply/%s/current_now"
+	#define POWER_SUPPLY_POWER    "/sys/class/power_supply/%s/power_now"
 
 	static const char *
 	pick(const char *bat, const char *f1, const char *f2, char *path,
