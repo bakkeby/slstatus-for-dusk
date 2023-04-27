@@ -56,6 +56,7 @@ main(int argc, char *argv[])
 	char status_no[3] = {0};
 	const char *res;
 	const char *extcmd[] = { "duskc", "--ignore-reply", "run_command", "setstatus", status_no, status, NULL };
+	const char *bar_height = run_command("duskc get_bar_height");
 
 	ARGBEGIN {
 	case '1':
@@ -74,6 +75,8 @@ main(int argc, char *argv[])
 	sigaction(SIGTERM, &act, NULL);
 	act.sa_flags |= SA_RESTART;
 	sigaction(SIGUSR1, &act, NULL);
+
+	setenv("BAR_HEIGHT", bar_height, 1);
 
 	do {
 		if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
