@@ -14,6 +14,7 @@ Features
 - CPU frequency
 - Custom shell commands
 - Date and time
+- Disk IO (read, write and percentage) (Linux only)
 - Disk status (free storage, percentage, total storage and used storage)
 - Available entropy
 - Username/GID/UID

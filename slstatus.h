@@ -30,6 +30,11 @@ const char *entropy(const char *unused);
 /* hostname */
 const char *hostname(const char *unused);
 
+/* iocheck */
+const char *io_in(const char *unused);
+const char *io_out(const char *unused);
+const char *io_perc(const char *unused);
+
 /* ip */
 const char *ipv4(const char *interface);
 const char *ipv6(const char *interface);
