@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <sys/wait.h>
 
 #include "arg.h"
 #include "slstatus.h"
@@ -49,8 +50,9 @@ int
 main(int argc, char *argv[])
 {
 	struct sigaction act;
-	struct timespec start, current, diff, intspec, wait;
+	struct timespec start, current, diff, intspec, snooze;
 	size_t i;
+	int wait_status;
 	unsigned int loop_count = 0;
 	char status[MAXLEN];
 	char status_no[3] = {0};
@@ -125,9 +127,12 @@ main(int argc, char *argv[])
 
 			if (fork() == 0) {
 				setsid();
+				close(lock_fd);
 				execvp(extcmd[0], (char **)extcmd);
 				die("dwm: execvp '%s' failed:", extcmd[0]);
 			}
+
+			wait(&wait_status);
 		}
 
 		++loop_count;
@@ -139,9 +144,9 @@ main(int argc, char *argv[])
 
 			intspec.tv_sec = interval / 1000;
 			intspec.tv_nsec = (interval % 1000) * 1E6;
-			difftimespec(&wait, &intspec, &diff);
+			difftimespec(&snooze, &intspec, &diff);
 
-			if (wait.tv_sec >= 0 && nanosleep(&wait, NULL) < 0 && errno != EINTR)
+			if (snooze.tv_sec >= 0 && nanosleep(&snooze, NULL) < 0 && errno != EINTR)
 				die("nanosleep:");
 		}
 	} while (!done);
