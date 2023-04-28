@@ -129,7 +129,7 @@ main(int argc, char *argv[])
 				setsid();
 				close(lock_fd);
 				execvp(extcmd[0], (char **)extcmd);
-				die("dwm: execvp '%s' failed:", extcmd[0]);
+				die("Error: execvp '%s' failed:", extcmd[0]);
 			}
 
 			wait(&wait_status);
