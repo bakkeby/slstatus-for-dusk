@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
@@ -35,8 +36,7 @@ static void
 difftimespec(struct timespec *res, struct timespec *a, struct timespec *b)
 {
 	res->tv_sec = a->tv_sec - b->tv_sec - (a->tv_nsec < b->tv_nsec);
-	res->tv_nsec = a->tv_nsec - b->tv_nsec +
-	               (a->tv_nsec < b->tv_nsec) * 1E9;
+	res->tv_nsec = a->tv_nsec - b->tv_nsec + (a->tv_nsec < b->tv_nsec) * 1E9;
 }
 
 static void
@@ -55,8 +55,38 @@ main(int argc, char *argv[])
 	char status[MAXLEN];
 	char status_no[3] = {0};
 	const char *res;
+
+	/* The external command to run to update individual statuses. */
 	const char *extcmd[] = { "duskc", "--ignore-reply", "run_command", "setstatus", status_no, status, NULL };
+
+	/* Get the bar height and store it in an environment variable.
+	 * The run command will return NULL if dusk is not running. */
 	const char *bar_height = run_command("duskc get_bar_height");
+	if (bar_height)
+		setenv("BAR_HEIGHT", bar_height, 1);
+
+	/* Create a lock file that prevents multiple instances of this
+	 * program to be running for the same user on the same display. */
+	char lock_file[100] = {0};
+	snprintf(lock_file, sizeof lock_file - 1, "/tmp/.%s.slstatus.%s.lock", getenv("USER"), getenv("DISPLAY"));
+	struct flock fl = {
+		.l_type = F_WRLCK,
+		.l_whence = SEEK_SET,
+		.l_start = 0,
+		.l_len = 0
+	};
+
+	int lock_fd = open(lock_file, O_CREAT | O_RDWR, 0644);
+	if (lock_fd == -1) {
+		fprintf(stderr, "Error: Failed to open lock file %s: %s\n", lock_file, strerror(errno));
+		exit(1);
+	}
+
+	/* Try to acquire a lock on the file */
+	if (fcntl(lock_fd, F_SETLK, &fl) == -1) {
+		fprintf(stderr, "Error: Another instance of the program is already running\n");
+		exit(1);
+	}
 
 	ARGBEGIN {
 	case '1':
@@ -75,8 +105,6 @@ main(int argc, char *argv[])
 	sigaction(SIGTERM, &act, NULL);
 	act.sa_flags |= SA_RESTART;
 	sigaction(SIGUSR1, &act, NULL);
-
-	setenv("BAR_HEIGHT", bar_height, 1);
 
 	do {
 		if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
@@ -117,6 +145,14 @@ main(int argc, char *argv[])
 				die("nanosleep:");
 		}
 	} while (!done);
+
+	/* Release the lock on the file */
+	fl.l_type = F_UNLCK;
+	fcntl(lock_fd, F_SETLK, &fl);
+
+	/* Close the lock file when the program exits */
+	close(lock_fd);
+	unlink(lock_file);
 
 	return 0;
 }
