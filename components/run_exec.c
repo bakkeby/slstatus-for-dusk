@@ -24,6 +24,7 @@ run_exec(const char *cmd)
 	pid_t pid;
 	ssize_t bytes_read;
 	posix_spawn_file_actions_t actions;
+	buf[0] = '\0';
 
 	if (pipe(pipefd) == -1)
 		die("Error: run_exec '%s' failed reading pipe:", cmd);
