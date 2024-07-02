@@ -49,7 +49,7 @@ run_exec(const char *cmd)
 	argv[argc] = NULL;
 	free(exec);
 
-	if (posix_spawnp(&pid, argv[0], &actions, NULL, argv, NULL) != 0)
+	if (posix_spawnp(&pid, argv[0], &actions, NULL, argv, environ) != 0)
 		die("Error: run_exec '%s' failed excuting posix_spawnp:", cmd);
 
 	close(pipefd[1]); // Close the write end of the pipe in the parent process

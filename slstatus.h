@@ -1,5 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
+extern char **environ;
+
 /* backlight */
 const char *backlight_perc(const char *);
 
