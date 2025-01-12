@@ -53,6 +53,12 @@ const char *keymap(const char *unused);
 /* load_avg */
 const char *load_avg(const char *unused);
 
+/* media */
+const char *media_mpd_stat(const char *unused);
+
+/* mpd */
+const char *mpdonair(const char *fmt);
+
 /* netspeeds */
 const char *netspeed_rx(const char *interface);
 const char *netspeed_tx(const char *interface);
