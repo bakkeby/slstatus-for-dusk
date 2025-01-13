@@ -45,7 +45,7 @@ static const char unknown_str[] = "n/a";
  * load_avg            load average                    NULL
  *
  * mpdonair            mpd status                      format string 
- *                     MPD_HOST and MPD_PORT           "t - a [p]"
+ *                     MPD_HOST and MPD_PORT           "t - a"
  *                     env var are used.               see mpd.c
  *                     Uncomment lines in Makefile 
  *
