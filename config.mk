@@ -14,6 +14,7 @@ LDFLAGS  = -s
 # OpenBSD: add -lsndio
 # FreeBSD: add -lkvm -lsndio
 LDLIBS   = -lX11
+LDINCS   =
 
 # compiler and linker
 CC = cc
