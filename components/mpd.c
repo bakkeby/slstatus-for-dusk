@@ -17,6 +17,15 @@ enum {
 	USE_SEPARATOR_ANYWAY
 };
 
+/* The below macros can not be set in config.h due to how the components are compiled before the
+ * configuration file is included.
+ *
+ * To override these you can add settings to the config.mk file under CPPFLAGS:
+ *
+ * E.g.
+ *    CPPFLAGS = -D_DEFAULT_SOURCE -DMPD_TITLE_LENGTH=40 -DMPD_ON_TEXT_FITS=USE_SEPARATOR_ANYWAY -DMPD_LOOP_TEXT='" --- "'
+ */
+
 #ifndef MPD_TITLE_LENGTH
 #define MPD_TITLE_LENGTH 20
 #endif
@@ -69,14 +78,13 @@ utf8strlen(const char *text)
 char *
 scroll_text(const char *input_text, int idx, int num_chars, const char *loop_text, int on_text_fits)
 {
-	int utf8charlen, i, num_leading_loop_characters; // temporary variables
+	int utf8charlen, i, s; // temporary variables
 	int c = 0; // keeps track of how many UTF-8 characters have been copied so far
 	int input_chars; // count of UTF-8 characters in the input text
 	int loop_chars; //  count of UTF-8 characters in the loop text
 	char *output_text = malloc((num_chars * 5 * sizeof(char)) + 1);
 	char *dest_iter = output_text; // iterator for the output text
-	const char *text_iter = input_text; // iterator for the input text
-	const char *loop_iter; // iterator for loop_text
+	const char *text_iter; // iterator for the input text
 	char loop_spaces[num_chars + 1]; // used for full space separator
 
 	/* Calculate the number of UTF-8 characters in the input text */
@@ -110,58 +118,34 @@ scroll_text(const char *input_text, int idx, int num_chars, const char *loop_tex
 		idx += input_chars + loop_chars;
 	}
 
-	/* Print the leading loop text when the text wraps around. */
-	if (idx >= input_chars) {
-		/* Start from the beginning of the loop text */
-		loop_iter = loop_text;
-
-		/* Skip ahead to the current loop character */
-		for (i = input_chars; i < idx; i++) {
-			loop_iter += grapheme_next_character_break_utf8(loop_iter, SIZE_MAX);
-		}
-
-		/* Copy the remaining loop characters */
-		num_leading_loop_characters = (input_chars + loop_chars - i);
-		for (i = 0; i < num_leading_loop_characters && c < num_chars; i++) {
-			utf8charlen = grapheme_next_character_break_utf8(loop_iter, SIZE_MAX);
-			strncpy(dest_iter, loop_iter, utf8charlen);
-			loop_iter += utf8charlen;
-			dest_iter += utf8charlen;
-			c++;
-		}
-
-		/* Set index back to 0 to wrap around and start from the beginning of the input text */
-		idx = 0;
+	/* Determine whether we are starting with the loop text or the input text */
+	if ((s = (idx >= input_chars))) {
+		idx -= input_chars;
+		text_iter = loop_text;
+	} else {
+		text_iter = input_text;
 	}
 
-	/* Skip ahead to the current input character */
+	/* Skip ahead to the current character */
 	for (i = 0; i < idx; i++) {
 		text_iter += grapheme_next_character_break_utf8(text_iter, SIZE_MAX);
 	}
 
-	/* Start copying input text */
+	/* Start copying text */
 	while (c < num_chars) {
-		if ((utf8charlen = grapheme_next_character_break_utf8(text_iter, SIZE_MAX))) {
-			strncpy(dest_iter, text_iter, utf8charlen);
-			text_iter += utf8charlen;
-			dest_iter += utf8charlen;
-			c++;
+		utf8charlen = grapheme_next_character_break_utf8(text_iter, SIZE_MAX);
+
+		/* If this is the end of the text then swap the loop and input text strings */
+		if (!utf8charlen) {
+			text_iter = (s ? input_text : loop_text);
+			s = !s;
 			continue;
 		}
 
-		/* If we get this far then we hit the end of the input text, in which case we then add up
-		 * to num_chars loop characters. */
-		loop_iter = loop_text;
-		for (i = 0; i < loop_chars && c < num_chars; i++) {
-			utf8charlen = grapheme_next_character_break_utf8(loop_iter, SIZE_MAX);
-			strncpy(dest_iter, loop_iter, utf8charlen);
-			loop_iter += utf8charlen;
-			dest_iter += utf8charlen;
-			c++;
-		}
-
-		/* Start from the beginning of the input text again, should there be room to continue */
-		text_iter = input_text;
+		strncpy(dest_iter, text_iter, utf8charlen);
+		text_iter += utf8charlen;
+		dest_iter += utf8charlen;
+		c++;
 	}
 
 	/* Ensure that we add a null terminator to the output string */
@@ -170,19 +154,21 @@ scroll_text(const char *input_text, int idx, int num_chars, const char *loop_tex
 	return output_text;
 }
 
-
-/* fmt consist of lowercase :
- * "a" for artist,
- * "t" for song title,
- * "at" for song artist then title
- * if not a or t, any character will be represented as separator.
- * i.e: "a-t" gives "artist-title"
-*/
+/* fmt consist of lowercase:
+ *   "a" for artist,
+ *   "t" for song title,
+ *   "at" for song artist then title
+ *   if not a or t, any character will be represented as separator.
+ *   i.e: "a-t" gives "artist-title"
+ *
+ * By default the whole output will scroll, but a capital A or a capital T can be used to only
+ * scroll the song title, for example.
+ */
 const char *
 mpdonair(const char *fmt)
 {
 	static struct mpd_connection *conn; /* kept between calls */
-	static int scroll_idx = 0;
+	static int scroll_idx = 0, artist_idx = 0, title_idx = 0;
 	static char prev_artist[255] = {0};
 	static char prev_title[255] = {0};
 	int scroll = 0, i;
@@ -251,9 +237,27 @@ mpdonair(const char *fmt)
 				strlcat(titlebuffer, artist, sizeof(titlebuffer));
 			}
 			break;
+		case 'A':
+			if (artist != NULL) {
+				char *scrolled_artist = scroll_text(artist, artist_idx, utf8strlen(artist), " ", USE_SEPARATOR_ANYWAY);
+				strlcat(titlebuffer, scrolled_artist, sizeof(titlebuffer));
+				free(scrolled_artist);
+				artist_idx += scroll;
+				scroll = 0;
+			}
+			break;
 		case 't':
 			if (title != NULL) {
 				strlcat(titlebuffer, title, sizeof(titlebuffer));
+			}
+			break;
+		case 'T':
+			if (title != NULL) {
+				char *scrolled_title = scroll_text(title, title_idx, utf8strlen(title), " ", USE_SEPARATOR_ANYWAY);
+				strlcat(titlebuffer, scrolled_title, sizeof(titlebuffer));
+				free(scrolled_title);
+				title_idx += scroll;
+				scroll = 0;
 			}
 			break;
 		default:
