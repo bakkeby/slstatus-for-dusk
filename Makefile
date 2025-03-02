@@ -35,9 +35,9 @@ COM =\
 all: slstatus
 
 # Uncomment to use mpdonair
-COM += components/mpd
-LDLIBS += -lmpdclient -lgrapheme
-LDINCS += -I/usr/local/lib
+#COM += components/mpd
+#LDLIBS += -lmpdclient -lgrapheme
+#LDINCS += -I/usr/local/lib
 
 $(COM:=.o): config.mk $(REQ:=.h) slstatus.h
 slstatus.o: slstatus.c slstatus.h arg.h config.h config.mk $(REQ:=.h)
