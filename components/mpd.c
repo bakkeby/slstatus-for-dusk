@@ -14,17 +14,8 @@ static int utf8strlen(const char *text);
 enum {
 	NO_SCROLL,
 	FULL_SPACE_SEPARATOR,
-	USE_SEPARATOR_ANYWAY
+	FORCE_SCROLL
 };
-
-/* The below macros can not be set in config.h due to how the components are compiled before the
- * configuration file is included.
- *
- * To override these you can add settings to the config.mk file under CPPFLAGS:
- *
- * E.g.
- *    CPPFLAGS = -D_DEFAULT_SOURCE -DMPD_TITLE_LENGTH=40 -DMPD_ON_TEXT_FITS=USE_SEPARATOR_ANYWAY -DMPD_LOOP_TEXT='" --- "'
- */
 
 #ifndef MPD_TITLE_LENGTH
 #define MPD_TITLE_LENGTH 20
@@ -90,21 +81,16 @@ scroll_text(const char *input_text, int idx, int num_chars, const char *loop_tex
 	/* Calculate the number of UTF-8 characters in the input text */
 	input_chars = utf8strlen(input_text);
 
-	/* What to do if the input text fits in the available space. */
-	if (!loop_text || input_chars <= num_chars) {
-		switch (on_text_fits) {
-		case NO_SCROLL:
-			idx = 0;
-			/* falls through */
-		case FULL_SPACE_SEPARATOR:
-			for (i = 0; i < num_chars; i++)
-				loop_spaces[i] = ' ';
-			loop_spaces[i] = '\0';
-			loop_text = &loop_spaces[0];
-			break;
-		case USE_SEPARATOR_ANYWAY:
-			break;
-		}
+	/* Fall back to using full space separator */
+	if (!loop_text || (input_chars <= num_chars && on_text_fits != FORCE_SCROLL)) {
+		for (i = 0; i < num_chars; i++)
+			loop_spaces[i] = ' ';
+		loop_spaces[i] = '\0';
+		loop_text = &loop_spaces[0];
+	}
+
+	if (input_chars <= num_chars && on_text_fits == NO_SCROLL) {
+		idx = 0;
 	}
 
 	/* Calculate the number of UTF-8 characters in the loop text */
@@ -239,7 +225,7 @@ mpdonair(const char *fmt)
 			break;
 		case 'A':
 			if (artist != NULL) {
-				char *scrolled_artist = scroll_text(artist, artist_idx, utf8strlen(artist), " ", USE_SEPARATOR_ANYWAY);
+				char *scrolled_artist = scroll_text(artist, artist_idx, utf8strlen(artist), " ", FORCE_SCROLL);
 				strlcat(titlebuffer, scrolled_artist, sizeof(titlebuffer));
 				free(scrolled_artist);
 				artist_idx += scroll;
@@ -253,7 +239,7 @@ mpdonair(const char *fmt)
 			break;
 		case 'T':
 			if (title != NULL) {
-				char *scrolled_title = scroll_text(title, title_idx, utf8strlen(title), " ", USE_SEPARATOR_ANYWAY);
+				char *scrolled_title = scroll_text(title, title_idx, utf8strlen(title), " ", FORCE_SCROLL);
 				strlcat(titlebuffer, scrolled_title, sizeof(titlebuffer));
 				free(scrolled_title);
 				title_idx += scroll;
