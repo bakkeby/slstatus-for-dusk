@@ -43,6 +43,12 @@ static const char unknown_str[] = "n/a";
  * keymap              layout (variant) of current     NULL
  *                     keymap
  * load_avg            load average                    NULL
+ *
+ * mpdonair            mpd status                      format string 
+ *                     MPD_HOST and MPD_PORT           "t - a"
+ *                     env var are used.               see mpd.c
+ *                     Uncomment lines in Makefile 
+ *
  * netspeed_rx         receive network speed           interface name (wlan0)
  * netspeed_tx         transfer network speed          interface name (wlan0)
  * num_files           number of files in a directory  path
@@ -74,6 +80,6 @@ static const char unknown_str[] = "n/a";
  * wifi_perc           WiFi signal in percent          interface name (wlan0)
  */
 static const struct arg args[] = {
-	/* function format          argument  status_no update_interval */
-	{ datetime, "%s",           "%F %T",  "1",      1 },
+	/* function format          argument      status_no     update_interval */
+	{ datetime, "%s",           "%F %T",      "1",          1 },
 };
