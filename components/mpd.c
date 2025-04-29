@@ -191,8 +191,7 @@ mpdonair(const char *fmt)
 		scroll = 0;
 	} else if (state == MPD_STATE_STOP) {
 		strncat(buf, "  ", sizeof(buf) - strlen(buf) -1);
-		scroll = 0;
-		scroll_idx = 0;
+		goto mpdreturn;
 	} else if (state == MPD_STATE_UNKNOWN) {
 		goto mpdout;
 	}
@@ -258,6 +257,7 @@ mpdonair(const char *fmt)
 
 	scroll_idx += scroll;
 
+mpdreturn:
 	mpd_status_free(status);
 	mpd_song_free(song);
 	mpd_response_finish(conn);
