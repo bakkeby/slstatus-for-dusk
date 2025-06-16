@@ -22,14 +22,19 @@ VERSION = 0
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
+X11INC = /usr/X11R6/include
+X11LIB = /usr/X11R6/lib
+
+PKG_CONFIG = pkg-config
+
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE $(MPDFLAGS)
 CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Wno-unused-parameter -Os
 LDFLAGS  = -s
 # OpenBSD: add -lsndio
 # FreeBSD: add -lkvm -lsndio
-LDLIBS   = -lX11 $(MPDLIBS)
+LDLIBS   = `$(PKG_CONFIG) --libs x11` $(MPDLIBS)
 LDINCS   = $(MPDINCS)
 
 # compiler and linker
-CC = cc
+# CC = cc

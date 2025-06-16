@@ -19,7 +19,7 @@ run_exec(const char *cmd)
 	char *argv[MAX_ARGS];
 	char *home_dir = getenv("HOME");
 	char *exec = strdup(cmd); // only to make a non-const copy
-	int argc = 0;
+	int argc = 0, argl;
 	int pipefd[2];
 	pid_t pid;
 	ssize_t bytes_read;
@@ -38,8 +38,9 @@ run_exec(const char *cmd)
 	while (token != NULL && argc < MAX_ARGS - 1) {
 		if (strncmp(token, "~/", 2) == 0) {
 			/* Replace ~/ with the value of HOME environment variable */
-			argv[argc] = malloc(strlen(home_dir) + strlen(token) - 1);
-			sprintf(argv[argc], "%s%s", home_dir, token + 1);
+			argl = strlen(home_dir) + strlen(token);
+			argv[argc] = malloc(argl);
+			snprintf(argv[argc], argl, "%s%s", home_dir, token + 1);
 		} else {
 			argv[argc] = strdup(token);
 		}
