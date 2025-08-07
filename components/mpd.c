@@ -8,26 +8,12 @@
 
 #include "../util.h"
 
+extern int mpd_title_length;
+extern char *mpd_loop_text;
+extern int mpd_on_text_fits;
+
 static char *scroll_text(const char *text, int idx, int num_chars, const char *loop_text, int on_text_fits);
 static int utf8strlen(const char *text);
-
-enum {
-	NO_SCROLL,
-	FULL_SPACE_SEPARATOR,
-	FORCE_SCROLL
-};
-
-#ifndef MPD_TITLE_LENGTH
-#define MPD_TITLE_LENGTH 20
-#endif
-
-#ifndef MPD_ON_TEXT_FITS
-#define MPD_ON_TEXT_FITS NO_SCROLL
-#endif
-
-#ifndef MPD_LOOP_TEXT
-#define MPD_LOOP_TEXT " ~ "
-#endif
 
 int
 utf8strlen(const char *text)
@@ -251,7 +237,7 @@ mpdonair(const char *fmt)
 		}
 	}
 
-	char *scrolled_text = scroll_text(titlebuffer, scroll_idx, MPD_TITLE_LENGTH, MPD_LOOP_TEXT, MPD_ON_TEXT_FITS);
+	char *scrolled_text = scroll_text(titlebuffer, scroll_idx, mpd_title_length, mpd_loop_text, mpd_on_text_fits);
 	strncat(buf, scrolled_text, sizeof(buf) - strlen(buf) - 1);
 	free(scrolled_text);
 

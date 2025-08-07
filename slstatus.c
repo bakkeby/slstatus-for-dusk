@@ -13,18 +13,22 @@
 #include "slstatus.h"
 #include "util.h"
 
+typedef const char* (*ArgFunc)(const char *);
+typedef struct arg arg;
+
 struct arg {
 	const char *(*func)(const char *);
-	const char *fmt;
-	const char *args;
-	const char *status_no;
-	const unsigned int update_interval;
+	char *fmt;
+	char *args;
+	char *status_no;
+	unsigned int update_interval;
 };
 
 char buf[1024];
 static volatile sig_atomic_t done;
 
 #include "config.h"
+#include "conf.c"
 
 static void
 terminate(const int signo)
@@ -51,10 +55,13 @@ main(int argc, char *argv[])
 {
 	struct sigaction act;
 	struct timespec start, current, diff, intspec, snooze;
-	size_t i;
+	int i;
 	int wait_status;
 	unsigned int loop_count = 0;
-	char status[MAXLEN];
+
+	load_config();
+
+	char status[maximum_status_length];
 	char status_no[3] = {0};
 	const char *res;
 
@@ -112,18 +119,18 @@ main(int argc, char *argv[])
 		if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
 			die("clock_gettime:");
 
-		for (i = 0; i < LEN(args); i++) {
-			if (loop_count % args[i].update_interval)
+		for (i = 0; i < num_modules; i++) {
+			if (loop_count % modules[i].update_interval)
 				continue;
 
 			status[0] = '\0';
-			if (!(res = args[i].func(args[i].args)))
-				res = unknown_str;
+			if (!(res = modules[i].func(modules[i].args)))
+				res = (unknown_string ? unknown_string : unknown_str);
 
-			if (esnprintf(status, sizeof(status), args[i].fmt, res) < 0)
+			if (esnprintf(status, sizeof(status), modules[i].fmt, res) < 0)
 				break;
 
-			esnprintf(status_no, sizeof(status_no), args[i].status_no);
+			esnprintf(status_no, sizeof(status_no), modules[i].status_no);
 
 			if (fork() == 0) {
 				setsid();
@@ -150,6 +157,8 @@ main(int argc, char *argv[])
 				die("nanosleep:");
 		}
 	} while (!done);
+
+	cleanup_config();
 
 	/* Release the lock on the file */
 	fl.l_type = F_UNLCK;

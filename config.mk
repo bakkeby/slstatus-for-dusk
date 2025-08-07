@@ -16,7 +16,7 @@ VERSION = 0
 # Uncomment the below to use mpdonair.
 #MPDLIBS = -lmpdclient -lgrapheme
 #MPDINCS = -I/usr/local/lib
-#MPDFLAGS = -DMPD_TITLE_LENGTH=20 -DMPD_ON_TEXT_FITS=NO_SCROLL -DMPD_LOOP_TEXT='" ~ "'
+#MPDFLAGS = -DHAVE_MPD=1 -DMPD_TITLE_LENGTH=20 -DMPD_ON_TEXT_FITS=NO_SCROLL -DMPD_LOOP_TEXT='" ~ "'
 
 # paths
 PREFIX = /usr/local
@@ -27,13 +27,15 @@ X11LIB = /usr/X11R6/lib
 
 PKG_CONFIG = pkg-config
 
+CONFIG = `$(PKG_CONFIG) --libs libconfig`
+
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE $(MPDFLAGS)
 CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Wno-unused-parameter -Os
 LDFLAGS  = -s
 # OpenBSD: add -lsndio
 # FreeBSD: add -lkvm -lsndio
-LDLIBS   = `$(PKG_CONFIG) --libs x11` $(MPDLIBS)
+LDLIBS   = `$(PKG_CONFIG) --libs x11` $(MPDLIBS) $(CONFIG)
 LDINCS   = $(MPDINCS)
 
 # compiler and linker
