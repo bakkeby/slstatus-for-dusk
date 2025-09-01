@@ -8,6 +8,14 @@ extern char buf[1024];
 
 extern char *argv0;
 
+#if HAVE_MPD
+enum {
+	NO_SCROLL,
+	FULL_SPACE_SEPARATOR,
+	FORCE_SCROLL
+};
+#endif
+
 void warn(const char *, ...);
 void die(const char *, ...);
 
