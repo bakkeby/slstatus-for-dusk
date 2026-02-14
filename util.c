@@ -140,6 +140,23 @@ pscanf(const char *path, const char *fmt, ...)
 	return (n == EOF) ? -1 : n;
 }
 
+int
+lscanf(FILE *fp, const char *key, const char *fmt, void *res)
+{
+	int n;
+	char line[256];
+
+	n = -1;
+	while (fgets(line, sizeof(line), fp))
+		if (strncmp(line, key, strlen(key)) == 0) {
+			n = sscanf(line + strlen(key), fmt, res);
+			break;
+		}
+
+	rewind(fp);
+	return (n == 1) ? 1 : -1;
+}
+
 /*
  * Copy string src to buffer dst of size dsize.  At most dsize-1
  * chars will be copied.  Always NUL terminates (unless dsize == 0).

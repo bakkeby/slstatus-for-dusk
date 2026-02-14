@@ -1,5 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 #include <stdint.h>
+#include <stdio.h>
 
 extern char buf[1024];
 
@@ -23,5 +24,6 @@ int esnprintf(char *str, size_t size, const char *fmt, ...);
 const char *bprintf(const char *fmt, ...);
 const char *fmt_human(uintmax_t num, int base);
 int pscanf(const char *path, const char *fmt, ...);
+int lscanf(FILE *fp, const char *key, const char *fmt, void *res);
 size_t strlcpy(char * __restrict dst, const char * __restrict src, size_t dsize);
 size_t strlcat(char *dst, const char *src, size_t siz);
