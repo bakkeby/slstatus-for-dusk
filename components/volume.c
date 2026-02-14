@@ -86,6 +86,8 @@
 			if (c->addr == addr)
 				break;
 		}
+		if (c == NULL)
+			return;
 		c->val = val;
 	}
 
