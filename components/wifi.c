@@ -26,24 +26,16 @@
 	static char resp[4096];
 
 	static char *
-	findattr(int attr, char *p, char *e, size_t *len)
+	findattr(int attr, const char *p, const char *e, size_t *len)
 	{
-		struct nlattr nla;
-		size_t alen;
-
-		while ((size_t)(e-p) >= sizeof(nla)) {
+		while (p < e) {
+			struct nlattr nla;
 			memcpy(&nla, p, sizeof(nla));
-			if (nla.nla_len < NLA_HDRLEN)
-				return NULL;
 			if (nla.nla_type == attr) {
-				p += NLA_HDRLEN;
-				*len = nla.nla_len-NLA_HDRLEN;
-				return (size_t)(e-p)>=*len?p:NULL;
+				*len = nla.nla_len - NLA_HDRLEN;
+				return (char *)(p + NLA_HDRLEN);
 			}
-			alen = NLA_ALIGN(nla.nla_len);
-			if ((size_t)(e-p) < alen)
-				return NULL;
-			p += alen;
+			p += NLA_ALIGN(nla.nla_len);
 		}
 		return NULL;
 	}
@@ -97,9 +89,10 @@
 		}
 		if ((size_t)r <= sizeof(ctrl))
 			return 0;
-		p = findattr(CTRL_ATTR_FAMILY_ID, resp+sizeof(ctrl), resp+r, &len);
+		p = findattr(CTRL_ATTR_FAMILY_ID, resp + sizeof(ctrl), resp + r, &len);
 		if (p && len == 2)
 			memcpy(&id, p, 2);
+
 		return id;
 	}
 
@@ -173,11 +166,12 @@
 			return NULL;
 		}
 
-		if ((size_t)r <= NLMSG_HDRLEN+GENL_HDRLEN)
+		if ((size_t)r <= NLMSG_HDRLEN + GENL_HDRLEN)
 			return NULL;
-		p = findattr(NL80211_ATTR_SSID, resp+NLMSG_HDRLEN+GENL_HDRLEN, resp+r, &len);
+		p = findattr(NL80211_ATTR_SSID, resp + NLMSG_HDRLEN + GENL_HDRLEN, resp + r, &len);
 		if (p)
 			p[len] = 0;
+
 		return p;
 	}
 
@@ -189,8 +183,9 @@
 		uint16_t fam = nl80211fam();
 		ssize_t r;
 		size_t len;
-		char req[NLMSG_HDRLEN+GENL_HDRLEN+NLA_HDRLEN+NLA_ALIGN(4)] = {0}, *p = req, *e;
+		char req[NLMSG_HDRLEN + GENL_HDRLEN + NLA_HDRLEN + NLA_ALIGN(4)] = {0}, *p = req, *e;
 		int idx = ifindex(interface);
+
 		if (idx < 0) {
 			fprintf(stderr, "interface %s not found\n", interface);
 			return NULL;
@@ -210,16 +205,17 @@
 		}, sizeof(struct genlmsghdr));
 		p += GENL_HDRLEN;
 		memcpy(p, &(struct nlattr){
-			.nla_len = NLA_HDRLEN+4,
+			.nla_len = NLA_HDRLEN + 4,
 			.nla_type = NL80211_ATTR_IFINDEX,
 		}, sizeof(struct nlattr));
 		p += NLA_HDRLEN;
-		memcpy(p, &(uint32_t){idx}, 4);
+		memcpy(p, &idx, 4);
 
 		if (send(nlsock, req, sizeof(req), 0) != sizeof(req)) {
 			warn("send 'AF_NETLINK':");
 			return NULL;
 		}
+
 		*strength = 0;
 		while (1) {
 			r = recv(nlsock, resp, sizeof(resp), 0);
@@ -229,9 +225,10 @@
 			}
 			if ((size_t)r < sizeof(hdr))
 				return NULL;
-			for (p = resp; p != resp+r && (size_t)(resp+r-p) >= sizeof(hdr); p = e) {
+
+			for (p = resp; p != resp + r && (size_t)(resp + r-p) >= sizeof(hdr); p = e) {
 				memcpy(&hdr, p, sizeof(hdr));
-				e = resp+r-p<hdr.nlmsg_len?resp+r:p+hdr.nlmsg_len;
+				e = resp + r - p < hdr.nlmsg_len ? resp + r : p + hdr.nlmsg_len;
 				if (!*strength && hdr.nlmsg_len > NLMSG_HDRLEN+GENL_HDRLEN) {
 					p += NLMSG_HDRLEN+GENL_HDRLEN;
 					p = findattr(NL80211_ATTR_STA_INFO, p, e, &len);
@@ -241,7 +238,7 @@
 						snprintf(strength, sizeof(strength), "%d", RSSI_TO_PERC(*p));
 				}
 				if (hdr.nlmsg_type == NLMSG_DONE)
-					return *strength?strength:NULL;
+					return *strength ? strength : NULL;
 			}
 		}
  	}
