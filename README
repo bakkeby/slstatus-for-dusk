@@ -19,7 +19,7 @@ Features
 - Available entropy
 - Username/GID/UID
 - Hostname
-- IP address (IPv4 and IPv6)
+- IP address (IPv4 and IPv6), interface status
 - Kernel version
 - Keyboard indicators
 - Keymap
