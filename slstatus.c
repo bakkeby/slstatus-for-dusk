@@ -47,7 +47,7 @@ difftimespec(struct timespec *res, struct timespec *a, struct timespec *b)
 static void
 usage(void)
 {
-	die("usage: %s [-s] [-1]", argv0);
+	die("usage: %s [-v] [-s] [-1]", argv0);
 }
 
 int
@@ -98,6 +98,8 @@ main(int argc, char *argv[])
 	}
 
 	ARGBEGIN {
+	case 'v':
+		die("slstatus-"VERSION);
 	case '1':
 		done = 1;
 		/* FALLTHROUGH */

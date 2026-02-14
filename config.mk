@@ -30,7 +30,7 @@ PKG_CONFIG = pkg-config
 CONFIG = `$(PKG_CONFIG) --libs libconfig`
 
 # flags
-CPPFLAGS = -D_DEFAULT_SOURCE $(MPDFLAGS)
+CPPFLAGS = -D_DEFAULT_SOURCE -DVERSION=\"${VERSION}\" $(MPDFLAGS)
 CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Wno-unused-parameter -Os
 LDFLAGS  = -s
 # OpenBSD: add -lsndio
