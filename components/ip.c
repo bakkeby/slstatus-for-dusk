@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 #include <ifaddrs.h>
 #include <netdb.h>
+#include <net/if.h>
 #include <stdio.h>
 #include <string.h>
 #if defined(__OpenBSD__)
@@ -58,4 +59,29 @@ const char *
 ipv6(const char *interface)
 {
 	return ip(interface, AF_INET6);
+}
+
+const char *
+up(const char *interface)
+{
+	struct ifaddrs *ifaddr, *ifa;
+
+	if (getifaddrs(&ifaddr) < 0) {
+		warn("getifaddrs:");
+		return NULL;
+	}
+
+	for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
+		if (!ifa->ifa_addr)
+			continue;
+
+		if (!strcmp(ifa->ifa_name, interface)) {
+			freeifaddrs(ifaddr);
+			return ifa->ifa_flags & IFF_UP ? "up" : "down";
+		}
+	}
+
+	freeifaddrs(ifaddr);
+
+	return NULL;
 }

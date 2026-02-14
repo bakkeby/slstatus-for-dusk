@@ -40,6 +40,7 @@ const char *io_perc(const char *unused);
 /* ip */
 const char *ipv4(const char *interface);
 const char *ipv6(const char *interface);
+const char *up(const char *interface);
 
 /* kernel_release */
 const char *kernel_release(const char *unused);
