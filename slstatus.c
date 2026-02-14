@@ -100,7 +100,7 @@ main(int argc, char *argv[])
 	ARGBEGIN {
 	case 'v':
 		die("slstatus-"VERSION);
-		return 0;
+		break;
 	case '1':
 		done = 1;
 		/* FALLTHROUGH */
