@@ -29,8 +29,8 @@ get_layout(char *syms, int grp_num)
 	int grp;
 
 	layout = NULL;
-	tok = strtok(syms, "+:");
-	for (grp = 0; tok && grp <= grp_num; tok = strtok(NULL, "+:")) {
+	tok = strtok(syms, "+:_");
+	for (grp = 0; tok && grp <= grp_num; tok = strtok(NULL, "+:_")) {
 		if (!valid_layout_or_variant(tok)) {
 			continue;
 		} else if (strlen(tok) == 1 && isdigit(tok[0])) {
