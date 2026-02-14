@@ -64,9 +64,3 @@ Configuration
 -------------
 slstatus can be customized by creating a custom config.h and (re)compiling the
 source code. This keeps it fast, secure and simple.
-
-
-Upcoming
---------
-A first feature-complete release with official packages for common distributions
-will come soon.
