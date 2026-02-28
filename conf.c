@@ -1,7 +1,7 @@
 #include <libconfig.h>
 
-#define PATH_MAX 4080
 const char *progname = "slstatus";
+static char *cfg_filename = "slstatus.cfg";
 
 static char *unknown_string = NULL;
 static int num_modules = 0;
@@ -26,7 +26,7 @@ char *mpd_loop_text = NULL;
 int mpd_on_text_fits = MPD_ON_TEXT_FITS;
 #endif // HAVE_MPD
 
-void set_config_path(const char* filename, char *config_path, char *config_file);
+char *get_config_path(const char* filename);
 int config_lookup_strdup(const config_t *cfg, const char *name, char **strptr);
 int config_setting_lookup_strdup(const config_setting_t *cfg, const char *name, char **strptr);
 int config_lookup_unsigned_int(const config_t *cfg, const char *name, unsigned int *ptr);
@@ -98,31 +98,37 @@ config_setting_lookup_strdup(const config_setting_t *cfg, const char *name, char
 	return 0;
 }
 
-void
-set_config_path(const char* filename, char *config_path, char *config_file)
+char *
+get_config_path(const char *filename)
 {
-	const char *xdg_config_home = getenv("XDG_CONFIG_HOME");
-	const char *home = getenv("HOME");
+	if (!filename)
+		return NULL;
 
-	if (xdg_config_home && xdg_config_home[0] != '\0') {
-		snprintf(config_path, PATH_MAX, "%s/%s/", xdg_config_home, progname);
-	} else if (home) {
-		snprintf(config_path, PATH_MAX, "%s/.config/%s/", home, progname);
-	} else {
-		return;
+	if (startswith("/", filename)) {
+		return strdup(filename);
 	}
 
-	snprintf(config_file, PATH_MAX, "%s/%s.cfg", config_path, filename);
+	const char *xdg_config_home = getenv("XDG_CONFIG_HOME");
+	if (xdg_config_home && xdg_config_home[0] != '\0') {
+		return xasprintf("%s/%s/%s", xdg_config_home, progname, filename);
+	}
+
+	const char *home = getenv("HOME");
+	if (home && home[0] != '\0') {
+		return xasprintf("%s/.config/%s/%s", home, progname, filename);
+	}
+
+	return NULL;
 }
 
 void
 load_config(void)
 {
 	config_t cfg;
-	char config_path[PATH_MAX] = {0};
-	char config_file[PATH_MAX] = {0};
 
-	set_config_path(progname, config_path, config_file);
+	char *config_file = get_config_path(cfg_filename);
+	char *config_path = path_dirname(config_file);
+
 	config_init(&cfg);
 	config_set_include_dir(&cfg, config_path);
 
@@ -142,6 +148,9 @@ load_config(void)
 			config_error_text(&cfg)
 		);
 	}
+
+	free(config_file);
+	free(config_path);
 
 	load_fallback_config();
 	config_destroy(&cfg);
