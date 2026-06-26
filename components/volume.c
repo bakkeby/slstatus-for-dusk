@@ -263,11 +263,14 @@
 					close(afd);
 					return NULL;
 				}
+				close(afd);
+				return bprintf("%d", v & 0xff);
 			}
 		}
 
 		close(afd);
+		warn("vol_perc: no 'vol' mixer device");
 
-		return bprintf("%d", v & 0xff);
+		return NULL;
 	}
 #endif
