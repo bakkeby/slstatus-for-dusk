@@ -112,7 +112,7 @@
 		int rnswap, nswap, i;
 
 		if ((nswap = swapctl(SWAP_NSWAP, 0, 0)) < 1) {
-			warn("swaptctl 'SWAP_NSWAP':");
+			warn("swapctl 'SWAP_NSWAP':");
 			return 1;
 		}
 		if (!(fsep = sep = calloc(nswap, sizeof(*sep)))) {
@@ -120,11 +120,12 @@
 			return 1;
 		}
 		if ((rnswap = swapctl(SWAP_STATS, (void *)sep, nswap)) < 0) {
-			warn("swapctl 'SWAP_STATA':");
+			warn("swapctl 'SWAP_STATS':");
 			return 1;
 		}
 		if (nswap != rnswap) {
 			warn("getstats: SWAP_STATS != SWAP_NSWAP");
+			free(fsep);
 			return 1;
 		}
 
@@ -132,8 +133,8 @@
 		*used = 0;
 
 		for (i = 0; i < rnswap; i++) {
-			*total += sep->se_nblks >> 1;
-			*used += sep->se_inuse >> 1;
+			*total += sep[i].se_nblks >> 1;
+			*used += sep[i].se_inuse >> 1;
 		}
 
 		free(fsep);
