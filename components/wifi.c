@@ -23,7 +23,7 @@
 
 	static int nlsock = -1;
 	static uint32_t seq = 1;
-	static char resp[4096];
+	static char resp[4096 + 1];
 
 	static char *
 	findattr(int attr, const char *p, const char *e, size_t *len)
@@ -109,7 +109,11 @@
 			return -1;
 		}
 		if (strcmp(ifr.ifr_name, interface) != 0) {
-			strcpy(ifr.ifr_name, interface);
+			if (snprintf(ifr.ifr_name, sizeof(ifr.ifr_name),
+			             "%s", interface) >= (int)sizeof(ifr.ifr_name)) {
+				warn("interface name too long: '%s'", interface);
+				return -1;
+			}
 		}
 		if (ioctl(ifsock, SIOCGIFINDEX, &ifr) != 0) {
 			warn("ioctl 'SIOCGIFINDEX':");
@@ -160,7 +164,7 @@
 			return NULL;
 		}
 
-		r = recv(nlsock, resp, sizeof(resp), 0);
+		r = recv(nlsock, resp, sizeof(resp) - 1, 0);
 		if (r < 0) {
 			warn("recv 'AF_NETLINK':");
 			return NULL;
